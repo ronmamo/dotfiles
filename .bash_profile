@@ -46,13 +46,14 @@ fi
 alias dc='docker-compose'
 
 dotfiles_sync() {
-	local DOTFILES="~/.bash_profile ~/.tool-versions"
+	local DOTFILES=".bash_profile .tool-versions"
+	local GITREPO=https://github.com/ronmamo/dotfiles
 	local WORKDIR=~/.dotfiles
 	rm -rf $WORKDIR || true
-	git clone https://github.com/ronmamo/dotfiles ~/.dotfiles
-	cd ~/.dotfiles
-	for FILE in ~/.bash_profile ~/.tool-versions; do cp -f $FILE .;	done
+	git clone $GITREPO $WORKDIR
+	cd $WORKDIR
+	for FILE in $DOTFILES; do cp -f ~/$FILE .; done
 	git add .; git commit -am "dotfiles_sync $(date +%m-%d-%y)"; git push 
 	cd -
-#	rm -rf $WORKDIR
+	rm -rf $WORKDIR
 }
