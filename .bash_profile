@@ -2,8 +2,9 @@
 alias ll='ls -al'
 alias l='ls -al'
 export VISUAL=nano
+export CLICOLOR=1
 
-PROMPT_COMMAND='pwd2=$(sed "s:\([^/]\)[^/]*/:\1/:g" <<<$PWD)'
+export PROMPT_COMMAND='pwd2=$(sed "s:\([^/]\)[^/]*/:\1/:g" <<<$PWD)' # prompt short path /Users/ron = /U/r
 export PS1='ॐ  $pwd2 \$ '
 
 # asdf
@@ -22,6 +23,7 @@ export PS1='ॐ  $pwd2 \$ '
 # bash history
 export HISTSIZE=100000
 export HISTFILESIZE=100000
+export HISTIGNORE=?:??
 shopt -s histappend
 export PROMPT_COMMAND="${PROMPT_COMMAND};history -a;history -n;"
 
@@ -42,11 +44,20 @@ if type brew &>/dev/null; then
   fi
 fi
 
+# ssh hostnames completion based on ~/.ssh/config
+[ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh;
+
+# bash options
+shopt -s nocaseglob
+shopt -s cdspell
+shopt -s autocd 2> /dev/null
+shopt -s globstar 2> /dev/null
+
 # docker
 alias dc='docker-compose'
 
 dotfiles_sync() {
-	local DOTFILES=".bash_profile .tool-versions"
+	local DOTFILES=".bash_profile .bashrc .tool-versions .hushlogin"
 	local GITREPO=https://github.com/ronmamo/dotfiles
 	local WORKDIR=~/.dotfiles
 	rm -rf $WORKDIR || true
