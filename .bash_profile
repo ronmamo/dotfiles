@@ -28,7 +28,7 @@ shopt -s histappend
 export PROMPT_COMMAND="${PROMPT_COMMAND};history -a;history -n;"
 
 # hub (git)
-! type hub 2&>1 /dev/null && echo "install hub - https://github.com/github/hub" || {
+! type hub 2>&1 > /dev/null && echo "install hub - https://github.com/github/hub" || {
 	alias git=hub
 }
 
@@ -43,18 +43,21 @@ if type brew &>/dev/null; then
     source "$(brew --prefix)/etc/profile.d/bash_completion.sh"
   fi
 fi
+unset COMPLETION
 
 # ssh hostnames completion based on ~/.ssh/config
 [ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh;
 
 # bash options
-shopt -s nocaseglob
-shopt -s cdspell
-shopt -s autocd 2> /dev/null
-shopt -s globstar 2> /dev/null
+for OPT in globstar nocaseglob #cdspell autocd
+do	
+	shopt -s $OPT 2> /dev/null
+done
+unset OPT
 
-# docker
+# other
 alias dc='docker-compose'
+alias kc='kubectl'
 
 dotfiles_sync() {
 	local DOTFILES=".bash_profile .bashrc .tool-versions .hushlogin"
