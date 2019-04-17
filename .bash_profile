@@ -78,9 +78,8 @@ dotfiles_sync() {
 	rm -rf $WORKDIR || true
 	git clone $GITREPO $WORKDIR
 	cd $WORKDIR
-	for FILE in $DOTFILES; do cp -f ~/$FILE .; done
-	git diff
-	# git add .; git commit -am "dotfiles_sync $(date +%m-%d-%y)"; git push 
-	cd -
-	rm -rf $WORKDIR
+	for FILE in $DOTFILES; do cp -Rf ~/$FILE .; done
+	git --no-pager diff; git status -s; echo "press enter to continue or ctrl-c to stop"; read
+	git add .; git commit -am "dotfiles_sync $(date +%m-%d-%y)"; git push
+	cd -; rm -rf $WORKDIR
 }
