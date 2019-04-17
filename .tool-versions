@@ -1,2 +1,4 @@
-java oracle-8.202 openjdk-12 openjdk-11.0.1
+java openjdk-12 openjdk-11.0.2 oracle-8.202
 golang 1.12
+scala 2.12.8 2.11.8
+kotlin 1.3.21
